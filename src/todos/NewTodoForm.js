@@ -1,36 +1,43 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { addTodoRequest } from "./thunks";
+import { Fab, ListItem, ListItemIcon } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import TextField from "@material-ui/core/TextField";
 import "./NewTodoForm.css";
-// import { createStore } from "redux";
-import { createTodo } from "./actions";
 
 const NewTodoForm = ({ todos, onCreatePressed }) => {
   const [inputValue, setInputValue] = useState("");
 
   return (
-    <div className="new-todo-form">
-      <input
-        className="new-todo-input"
+    <ListItem>
+      <TextField
+        id="standard-basic"
+        label="Type your new todo here"
         type="text"
-        placeholder="Type a New Todo here"
+        className="MuiListItemText-root MuiListItemText-multiline"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />
-      <button
-        onClick={() => {
-          const isDuplicateText = todos.some(
-            (todo) => todo.text === inputValue
-          );
-          if (!isDuplicateText) {
-            onCreatePressed(inputValue);
-            setInputValue("");
-          }
-        }}
-        className="new-todo-button"
-      >
-        Create Todo
-      </button>
-    </div>
+      <ListItemIcon>
+        <Fab
+          color="primary"
+          aria-label="add"
+          onClick={() => {
+            const isDuplicateText = todos.some(
+              (todo) => todo.text === inputValue
+            );
+            if (!isDuplicateText) {
+              onCreatePressed(inputValue);
+              setInputValue("");
+            }
+          }}
+          className="new-todo-button"
+        >
+          <AddIcon />
+        </Fab>
+      </ListItemIcon>
+    </ListItem>
   );
 };
 
@@ -39,7 +46,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onCreatePressed: (text) => dispatch(createTodo(text)),
+  onCreatePressed: (text) => dispatch(addTodoRequest(text)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewTodoForm);
